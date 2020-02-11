@@ -41,21 +41,20 @@ impl Layer for Vicinity {
         gossips_builder: &mut GossipsBuilder,
         all_nodes: &Nodes,
     ) {
-        let gossips = self.select_closest_nodes(
-            all_nodes
-                .get(gossips_builder.recipient())
-                .unwrap()
-                .profile(),
-            all_nodes
-                .available_nodes()
-                .iter()
-                .filter(|id| *id != gossips_builder.recipient())
-                .filter_map(|id| all_nodes.get(id))
-                .collect(),
-            VICINITY_MAX_GOSSIP_LENGTH,
-        );
-        for gossip in gossips {
-            gossips_builder.add(gossip);
+        if let Some(node) = all_nodes.get(gossips_builder.recipient()) {
+            let gossips = self.select_closest_nodes(
+                node.profile(),
+                all_nodes
+                    .available_nodes()
+                    .iter()
+                    .filter(|id| *id != gossips_builder.recipient())
+                    .filter_map(|id| all_nodes.get(id))
+                    .collect(),
+                VICINITY_MAX_GOSSIP_LENGTH,
+            );
+            for gossip in gossips {
+                gossips_builder.add(gossip);
+            }
         }
     }
 
