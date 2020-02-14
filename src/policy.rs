@@ -26,7 +26,7 @@ pub enum StrikeReason {
 
 #[derive(Debug, Clone, PartialEq, Eq, Default, Serialize, Deserialize)]
 pub struct Record {
-    lifetime_strikes: u32,
+    pub lifetime_strikes: u32,
     strikes: VecDeque<Strike>,
 }
 
