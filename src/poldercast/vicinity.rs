@@ -1,6 +1,5 @@
 use crate::{GossipsBuilder, Id, Layer, Node, NodeProfile, Nodes, ViewBuilder};
 use rand::seq::SliceRandom;
-use rayon::prelude::*;
 
 const VICINITY_MAX_VIEW_SIZE: usize = 20;
 const VICINITY_MAX_GOSSIP_LENGTH: usize = 10;
@@ -28,7 +27,7 @@ impl Layer for Vicinity {
             identity,
             all_nodes
                 .available_nodes()
-                .par_iter()
+                .iter()
                 .filter(|id| *id != identity.id())
                 .filter_map(|id| all_nodes.get(id))
                 .collect(),
@@ -47,7 +46,7 @@ impl Layer for Vicinity {
                 node.profile(),
                 all_nodes
                     .available_nodes()
-                    .par_iter()
+                    .iter()
                     .filter(|id| *id != gossips_builder.recipient())
                     .filter_map(|id| all_nodes.get(id))
                     .collect(),
@@ -84,7 +83,7 @@ impl Vicinity {
         profiles.shuffle(&mut rand::thread_rng());
 
         // Use unstable parallel sort as total number of nodes can be quite large.
-        profiles.par_sort_unstable_by(|left, right| {
+        profiles.sort_by(|left, right| {
             to.proximity(left.profile())
                 .cmp(&to.proximity(right.profile()))
         });
