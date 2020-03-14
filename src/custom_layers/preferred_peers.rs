@@ -6,16 +6,8 @@ pub struct PreferredPeers {
 }
 
 impl PreferredPeers {
-    pub fn add(&mut self, id: Id) {
-        self.preferred.push(id);
-    }
-}
-
-impl Default for PreferredPeers {
-    fn default() -> Self {
-        PreferredPeers {
-            preferred: Vec::new(),
-        }
+    pub fn with_peers(peers: Vec<Id>) -> Self {
+        PreferredPeers { preferred: peers }
     }
 }
 
